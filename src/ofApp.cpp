@@ -3,6 +3,8 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofBackground(0, 0, 0, 255);
+		ofSetWindowPosition(300, 1200);
+
     ofEnableBlendMode(OF_BLENDMODE_ADD);
     fboR.allocate(ofGetWidth(), ofGetHeight());
     fboG.allocate(ofGetWidth(), ofGetHeight());
@@ -28,6 +30,7 @@ void ofApp::setup(){
     gui.add(toggleDebug.setup("draw debug", true));
     showGui = true;
 //    ofSetBackgroundAuto(false);
+		
 }
 
 //--------------------------------------------------------------
@@ -57,9 +60,11 @@ void ofApp::draw(){
 void ofApp::drawR(){
     ofPushStyle();
     fboR.begin();
+				ofBackground(0, 0, 0, 255);
         ofSetColor(255, 0, 0, 127);
         ofCircle(100, 100, 100);
     fboR.end();
+		ofSetColor(255, 255, 255, 255);
     fboR.draw(0, 0);
     ofPopStyle();
 }
@@ -67,9 +72,11 @@ void ofApp::drawR(){
 void ofApp::drawG(){
     ofPushStyle();
     fboG.begin();
-        ofSetColor(0, 255, 0, 127);
+				ofBackground(0, 0, 0, 255);
+				ofSetColor(0, 255, 0, 127);
         ofCircle(150, 100, 100);
     fboG.end();
+		ofSetColor(255, 255, 255, 255);
     fboG.draw(0, 0);
     ofPopStyle();
 }
@@ -77,9 +84,11 @@ void ofApp::drawG(){
 void ofApp::drawB(){
     ofPushStyle();
     fboB.begin();
+				ofBackground(0, 0, 0, 255);
         ofSetColor(0, 0, 255, 127);
-        ofCircle(100, 150, 100);
+        ofCircle(125, 150, 100);
     fboB.end();
+		ofSetColor(255, 255, 255, 255);
     fboB.draw(0, 0);
     ofPopStyle();
 }
@@ -112,40 +121,40 @@ void ofApp::keyPressed(int key){
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
-    
+
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y ){
-
+		
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-
+		
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-
+		
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-
+		
 }
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
-
+		
 }
 
 //--------------------------------------------------------------
 void ofApp::gotMessage(ofMessage msg){
-
+		
 }
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
+void ofApp::dragEvent(ofDragInfo dragInfo){
 
 }
