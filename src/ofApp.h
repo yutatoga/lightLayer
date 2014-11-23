@@ -29,4 +29,6 @@ class ofApp : public ofBaseApp{
     ofxPanel gui;
     ofxToggle toggleR, toggleG, toggleB, toggleDebug;
     bool showGui;
+		
+		ofFbo fbo;
 };

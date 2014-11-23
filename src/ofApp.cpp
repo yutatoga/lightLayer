@@ -2,25 +2,29 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    ofBackground(0, 0, 0, 255);
 		ofSetWindowPosition(300, 1200);
-
     ofEnableBlendMode(OF_BLENDMODE_ADD);
+		ofBackground(0, 0, 0, 0);
     fboR.allocate(ofGetWidth(), ofGetHeight());
     fboG.allocate(ofGetWidth(), ofGetHeight());
     fboB.allocate(ofGetWidth(), ofGetHeight());
-    
+    fbo.allocate(ofGetWidth(), ofGetHeight());
+		
     fboR.begin();
-    ofClear(255, 255, 255, 0);
+    ofClear(0, 0, 0, 0);
     fboR.end();
     
     fboG.begin();
-    ofClear(255, 255, 255, 0);
+    ofClear(0, 0, 0, 0);
     fboG.end();
     
     fboB.begin();
-    ofClear(255, 255, 255, 0);
+    ofClear(0, 0, 0, 0);
     fboB.end();
+		
+		fbo.begin();
+    ofClear(0, 0, 0, 0);
+    fbo.end();
 
     gui.setup();
     gui.setPosition(10, 20);
@@ -29,8 +33,6 @@ void ofApp::setup(){
     gui.add(toggleB.setup("draw B", true));
     gui.add(toggleDebug.setup("draw debug", true));
     showGui = true;
-//    ofSetBackgroundAuto(false);
-		
 }
 
 //--------------------------------------------------------------
@@ -40,6 +42,8 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+		fbo.begin();
+		ofClear(0, 0, 0, 0);
     if (toggleR) {
         drawR();
     }
@@ -49,6 +53,9 @@ void ofApp::draw(){
     if (toggleB) {
         drawB();
     }
+		fbo.end();
+		ofSetColor(255, 255, 255, 255);
+		fbo.draw(0, 0);
     if (toggleDebug) {
         drawDebug();
     }
@@ -60,8 +67,8 @@ void ofApp::draw(){
 void ofApp::drawR(){
     ofPushStyle();
     fboR.begin();
-				ofBackground(0, 0, 0, 255);
-        ofSetColor(255, 0, 0, 127);
+				ofBackground(0, 0, 0, 0);
+        ofSetColor(255, 0, 0, 200);
         ofCircle(100, 100, 100);
     fboR.end();
 		ofSetColor(255, 255, 255, 255);
@@ -72,8 +79,8 @@ void ofApp::drawR(){
 void ofApp::drawG(){
     ofPushStyle();
     fboG.begin();
-				ofBackground(0, 0, 0, 255);
-				ofSetColor(0, 255, 0, 127);
+				ofBackground(0, 0, 0, 0);
+				ofSetColor(0, 255, 0, 200);
         ofCircle(150, 100, 100);
     fboG.end();
 		ofSetColor(255, 255, 255, 255);
@@ -84,8 +91,8 @@ void ofApp::drawG(){
 void ofApp::drawB(){
     ofPushStyle();
     fboB.begin();
-				ofBackground(0, 0, 0, 255);
-        ofSetColor(0, 0, 255, 127);
+				ofBackground(0, 0, 0, 0);
+        ofSetColor(0, 0, 255, 200);
         ofCircle(125, 150, 100);
     fboB.end();
 		ofSetColor(255, 255, 255, 255);
