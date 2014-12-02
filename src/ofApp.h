@@ -31,4 +31,6 @@ class ofApp : public ofBaseApp{
     bool showGui;
 		
 		ofFbo fbo;
+		
+		int last_blend_src, last_blend_dst, last_blend_src_alpha, last_blend_dst_alpha;
 };
