@@ -24,13 +24,11 @@ class ofApp : public ofBaseApp{
     void drawG();
     void drawB();
     void drawDebug();
+		void imageFilter(ofImage *img, ofImage *filteredImage, float r, float g, float b);
     
-    ofFbo fboR, fboG, fboB;
+    ofFbo fboR, fboG, fboB, fbo;
     ofxPanel gui;
     ofxToggle toggleR, toggleG, toggleB, toggleDebug;
     bool showGui;
-		
-		ofFbo fbo;
-
 		ofImage image;
 };

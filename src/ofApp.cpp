@@ -32,6 +32,9 @@ void ofApp::setup(){
     gui.add(toggleB.setup("draw B", true));
     gui.add(toggleDebug.setup("draw debug", true));
     showGui = true;
+		
+		image.loadImage("photo.jpg");
+		
 }
 
 //--------------------------------------------------------------
@@ -41,28 +44,35 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-		fbo.begin();
-		ofClear(0, 0, 0, 0);
-		glBlendFunc(GL_ONE, GL_ONE);
-    if (toggleR) {
-        drawR();
-    }
-    if (toggleG) {
-        drawG();
-    }
-    if (toggleB) {
-        drawB();
-    }
-		fbo.end();
-		ofSetColor(255, 255, 255, 255);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-		fbo.draw(0, 0);
-    if (toggleDebug) {
+//		fbo.begin();
+//		ofClear(0, 0, 0, 0);
+//		glBlendFunc(GL_ONE, GL_ONE);
+//    if (toggleR) {
+//        drawR();
+//    }
+//    if (toggleG) {
+//        drawG();
+//    }
+//    if (toggleB) {
+//        drawB();
+//    }
+//		fbo.end();
+//		ofSetColor(255, 255, 255, 255);
+//		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+//		fbo.draw(0, 0);
+
+		if (toggleDebug) {
         drawDebug();
     }
     if (showGui) {
         gui.draw();
     }
+		
+		// test
+//		image.draw(0, 0);
+		ofImage filteredImage;
+		imageFilter(&image, &filteredImage, 1.0, 0, 0);
+		filteredImage.draw(0, 0);
 }
 
 void ofApp::drawR(){
@@ -94,6 +104,19 @@ void ofApp::drawB(){
     fboB.end();
 		ofSetColor(255, 255, 255, 255);
     fboB.draw(0, 0);
+}
+
+void ofApp::imageFilter(ofImage *img, ofImage *filteredImage, float r, float g, float b){
+		*filteredImage = *img;
+		unsigned char* imageData =  filteredImage->getPixels();
+		for (int i = 0; i < img->getHeight(); i++) {
+				for (int j = 0; j < img->getWidth(); j++) {
+						imageData[(int)img->getWidth()*3*i+3*j] *= r;
+						imageData[(int)img->getWidth()*3*i+3*j+1] *= g;
+						imageData[(int)img->getWidth()*3*i+3*j+2] *= b;
+				}
+		}
+		filteredImage->update();
 }
 
 void ofApp::drawDebug(){
