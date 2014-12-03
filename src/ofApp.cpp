@@ -2,11 +2,9 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-		ofSetWindowPosition(300, 1200);
-//    ofEnableBlendMode(OF_BLENDMODE_ADD);
-		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE);
+//		ofSetWindowPosition(300, 1200);
 		ofBackground(0, 0, 0, 0);
-		
+
 		fboR.allocate(ofGetWidth(), ofGetHeight());
     fboR.begin();
     ofClear(0, 0, 0, 0);
@@ -34,35 +32,18 @@ void ofApp::setup(){
     gui.add(toggleB.setup("draw B", true));
     gui.add(toggleDebug.setup("draw debug", true));
     showGui = true;
-		
-		glGetIntegerv( GL_BLEND_SRC, &last_blend_src );
-		glGetIntegerv( GL_BLEND_DST, &last_blend_dst );
-		glGetIntegerv(GL_BLEND_SRC_ALPHA, &last_blend_src_alpha);
-		glGetIntegerv(GL_BLEND_DST_ALPHA, &last_blend_dst_alpha);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-		GLint blend_src, blend_dst, blend_src_alpha, blend_dst_alpha;
-		glGetIntegerv( GL_BLEND_SRC, &blend_src );
-		glGetIntegerv( GL_BLEND_DST, &blend_dst );
-		glGetIntegerv(GL_BLEND_SRC_ALPHA, &blend_src_alpha);
-		glGetIntegerv(GL_BLEND_DST_ALPHA, &blend_dst_alpha);
-		if (blend_src != last_blend_src | blend_dst != last_blend_dst | blend_src_alpha != last_blend_src_alpha | blend_dst_alpha != last_blend_dst_alpha) {
-				ofLogNotice("Blend Mode Changed!");
-		}
-		//ofLogNotice(ofToString(blend_src)+", "+ofToString(blend_dst)+", "+ofToString(blend_src_alpha)+", "+ofToString(blend_dst_alpha));
-		last_blend_src = blend_src;
-		last_blend_dst = blend_dst;
-		last_blend_src_alpha = blend_src_alpha;
-		last_blend_dst_alpha = blend_dst_alpha;
+
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-		ofClear(0, 0, 0, 255);
 		fbo.begin();
 		ofClear(0, 0, 0, 0);
+		glBlendFunc(GL_ONE, GL_ONE);
     if (toggleR) {
         drawR();
     }
@@ -74,6 +55,7 @@ void ofApp::draw(){
     }
 		fbo.end();
 		ofSetColor(255, 255, 255, 255);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 		fbo.draw(0, 0);
     if (toggleDebug) {
         drawDebug();
@@ -81,29 +63,23 @@ void ofApp::draw(){
     if (showGui) {
         gui.draw();
     }
-
-		ofSetColor(255, 0, 0, 127);
-		ofCircle(100, 500, 100);
-		ofSetColor(0, 255, 0, 127);
-		ofCircle(150, 500, 100);
-		ofSetColor(0, 0, 255, 127);
-		ofCircle(125, 550, 100);
 }
 
 void ofApp::drawR(){
     fboR.begin();
-				ofBackground(0, 0, 0, 0);
-        ofSetColor(255, 0, 0, 127);
+				ofClear(0, 0, 0, 0);
+        ofSetColor(255, 0, 0, 85);
         ofCircle(100, 100, 100);
     fboR.end();
 		ofSetColor(255, 255, 255, 255);
+		
     fboR.draw(0, 0);
 }
 
 void ofApp::drawG(){
     fboG.begin();
-				ofBackground(0, 0, 0, 0);
-				ofSetColor(0, 255, 0, 127);
+				ofClear(0, 0, 0, 0);
+				ofSetColor(0, 255, 0, 85);
         ofCircle(150, 100, 100);
     fboG.end();
 		ofSetColor(255, 255, 255, 255);
@@ -112,8 +88,8 @@ void ofApp::drawG(){
 
 void ofApp::drawB(){
     fboB.begin();
-				ofBackground(0, 0, 0, 0);
-        ofSetColor(0, 0, 255, 127);
+				ofClear(0, 0, 0, 0);
+        ofSetColor(0, 0, 255, 85);
         ofCircle(125, 150, 100);
     fboB.end();
 		ofSetColor(255, 255, 255, 255);
