@@ -32,4 +32,5 @@ public:
     bool showGui;
     ofImage image;
     ofShader shader;
+    int colorSelector;
 };

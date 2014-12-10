@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 //    ofSetWindowPosition(300, 1200);
-//    ofSetWindowShape(480, 320);
+    ofSetWindowShape(480, 320);
     ofBackground(0, 0, 0, 0);
 
     fboR.allocate(ofGetWidth(), ofGetHeight());
@@ -49,6 +49,8 @@ void ofApp::setup(){
 		
 		
     TIME_SAMPLE_SET_FRAMERATE(60.0f);
+//    ofSetVerticalSync(false);
+    colorSelector = 0;
 }
 
 //--------------------------------------------------------------
@@ -84,7 +86,31 @@ void ofApp::draw(){
     
     TS_START("R");
     shader.begin();
-    float col[] = {1.0, 0.0, 0.0, 1.0};
+    colorSelector++;
+    colorSelector %= 3;
+    float col[4];
+    switch (colorSelector) {
+        case 0:
+            col[0] = 1.0;
+            col[1] = 0.0;
+            col[2] = 0.0;
+            col[3] = 1.0;
+            break;
+        case 1:
+            col[0] = 0.0;
+            col[1] = 1.0;
+            col[2] = 0.0;
+            col[3] = 1.0;
+            break;
+        case 2:
+            col[0] = 0.0;
+            col[1] = 0.0;
+            col[2] = 1.0;
+            col[3] = 1.0;
+            break;
+        default:
+            break;
+    }
     shader.setUniform4fv("colorValue", col);
     image.draw(0, 0);
     shader.end();
