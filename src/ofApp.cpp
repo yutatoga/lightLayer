@@ -35,6 +35,20 @@ void ofApp::setup(){
 		
 		image.loadImage("photo.jpg");
 		
+#ifdef TARGET_OPENGLES
+//		shader.load("shadersES2/shader");
+		ofLogNotice("shader not found: TARGET_OPENGLES");
+#else
+		if(ofIsGLProgrammableRenderer()){
+				shader.load("shadersGL3/shader");
+		}else{
+//				shader.load("shadersGL2/shader");
+				ofLogNotice("shader not found: shadersGL2");
+		}
+#endif
+		
+		
+		TIME_SAMPLE_SET_FRAMERATE(60.0f);
 }
 
 //--------------------------------------------------------------
@@ -68,11 +82,14 @@ void ofApp::draw(){
         gui.draw();
     }
 		
-		// test
-//		image.draw(0, 0);
-		ofImage filteredImage;
-		imageFilter(&image, &filteredImage, 1.0, 0, 0);
-		filteredImage.draw(0, 0);
+		TS_START("R");
+		shader.begin();
+		float col[] = {1.0, 0.0, 0.0, 1.0};
+		shader.setUniform4fv("colorValue", col);
+		image.draw(0, 0);
+		shader.end();
+		TS_STOP("R");
+
 }
 
 void ofApp::drawR(){
@@ -135,6 +152,9 @@ void ofApp::keyPressed(int key){
         case 'h':
             showGui = !showGui;
             break;
+				case 't':
+						TIME_SAMPLE_GET_ENABLED() ? TIME_SAMPLE_DISABLE() : TIME_SAMPLE_ENABLE();
+						break;
         default:
             break;
     }

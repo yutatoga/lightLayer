@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
+#include "ofxTimeMeasurements.h"
 
 class ofApp : public ofBaseApp{
 
@@ -31,4 +32,6 @@ class ofApp : public ofBaseApp{
     ofxToggle toggleR, toggleG, toggleB, toggleDebug;
     bool showGui;
 		ofImage image;
+		
+		ofShader shader;
 };
