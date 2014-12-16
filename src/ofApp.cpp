@@ -83,8 +83,9 @@ void ofApp::draw(){
     if (showGui) {
         gui.draw();
     }
-    
-    TS_START("R");
+}
+
+void ofApp::flashDraw(){
     shader.begin();
     colorSelector++;
     colorSelector %= 3;
@@ -114,7 +115,6 @@ void ofApp::draw(){
     shader.setUniform4fv("colorValue", col);
     image.draw(0, 0);
     shader.end();
-    TS_STOP("R");
 }
 
 void ofApp::drawR(){

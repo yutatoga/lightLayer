@@ -20,6 +20,7 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     
+    void flashDraw();
     void drawR();
     void drawG();
     void drawB();
@@ -33,4 +34,5 @@ public:
     ofImage image;
     ofShader shader;
     int colorSelector;
+    
 };
