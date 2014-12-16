@@ -27,32 +27,25 @@ void ofApp::setup(){
     fbo.end();
     
     // ofxUI
-    
-    //ofxGui
-//    gui.setup();
-//    gui.setPosition(10, 20);
-//    gui.add(toggleR.setup("draw R", true));
-//    gui.add(toggleG.setup("draw G", true));
-//    gui.add(toggleB.setup("draw B", true));
-//    gui.add(toggleDebug.setup("draw debug", true));
-//    gui.add(floatSliderColorR.setup("color R", 1.0, 0.0, 5.0));
-//    gui.add(floatSliderColorG.setup("color G", 1.0, 0.0, 5.0));
-//    gui.add(floatSliderColorB.setup("color B", 1.0, 0.0, 5.0));
-
     gui = new ofxUICanvas();
-    gui->addToggle("draw R", true);
-    gui->addToggle("draw G", true);
-    gui->addToggle("draw B", true);
-    gui->addToggle("draw debug", true);
-    gui->addSlider("color R", 0.0, 5.0, 1.0);
-    gui->addSlider("color G", 0.0, 5.0, 1.0);
-    gui->addSlider("color B", 0.0, 5.0, 1.0);
-    
+    gui->setPosition(10, 20);
+    toggleDrawR = true;
+    gui->addToggle("draw R", toggleDrawR);
+    toggleDrawG = true;
+    gui->addToggle("draw G", toggleDrawG);
+    toggleDrawB = true;
+    gui->addToggle("draw B", toggleDrawB);
+    toggleDrawDebug = true;
+    gui->addToggle("draw debug", toggleDrawDebug);
+    sliderR = 1.0;
+    gui->addSlider("color R", 0.0, 5.0, &sliderR);
+    sliderG = 1.0;
+    gui->addSlider("color G", 0.0, 5.0, &sliderG);
+    sliderB = 1.0;
+    gui->addSlider("color B", 0.0, 5.0, &sliderB);
     gui->autoSizeToFitWidgets();
     ofAddListener(gui->newGUIEvent, this, &ofApp::guiEvent);
     gui->loadSettings("settings.xml");
-    
-    showGui = true;
 		
     image.loadImage("photo.jpg");
 		
@@ -85,39 +78,33 @@ void ofApp::update(){
 void ofApp::draw(){
     fbo.begin();
     ofClear(0, 0, 0, 0);
-//    //R
-//    shader.begin();
-//    float colorValueR[] = {floatSliderColorR, 0.0, 0.0, 1.0};
-//    shader.setUniform4fv("colorValue", colorValueR);
-//    image.draw(0, 0);
-//    shader.end();
-//    
-//    //G
-//    shader.begin();
-//    float colorValueG[] = {0.0, floatSliderColorG, 0.0, 1.0};
-//    shader.setUniform4fv("colorValue", colorValueG);
-//    image.draw(0, 0);
-//    shader.end();
-//
-//    //B
-//    shader.begin();
-//    float colorValueB[] = {0.0, 0.0, floatSliderColorB, 1.0};
-//    shader.setUniform4fv("colorValue", colorValueB);
-//    image.draw(0, 0);
-//    shader.end();
+    //R
+    shader.begin();
+    float colorValueR[] = {sliderR, 0.0, 0.0, 1.0};
+    shader.setUniform4fv("colorValue", colorValueR);
+    image.draw(0, 0);
+    shader.end();
+    
+    //G
+    shader.begin();
+    float colorValueG[] = {0.0, sliderG, 0.0, 1.0};
+    shader.setUniform4fv("colorValue", colorValueG);
+    image.draw(0, 0);
+    shader.end();
+
+    //B
+    shader.begin();
+    float colorValueB[] = {0.0, 0.0, sliderB, 1.0};
+    shader.setUniform4fv("colorValue", colorValueB);
+    image.draw(0, 0);
+    shader.end();
 
     fbo.end();
     fbo.draw(0, 0);
     
-//    if (toggleDebug) {
-//        drawDebug();
-//    }
-//    if (showGui) {
-//        gui.draw();
-//    }
-    
-    
-
+    if (toggleDrawDebug) {
+        drawDebug();
+    }
 }
 
 void ofApp::flashDraw(){
@@ -208,8 +195,8 @@ void ofApp::drawDebug(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     switch (key) {
-        case 'h':
-            showGui = !showGui;
+        case 'g':
+            gui->toggleVisible();
             break;
         case 't':
             TIME_SAMPLE_GET_ENABLED() ? TIME_SAMPLE_DISABLE() : TIME_SAMPLE_ENABLE();
@@ -263,9 +250,22 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 void ofApp::exit(){
     gui->saveSettings("settings.xml");
     delete gui;
-    
 }
 
 void ofApp::guiEvent(ofxUIEventArgs &e){
-    
+    string name = e.widget->getName();
+    int kind = e.widget->getKind();
+    if(name == "draw R"){
+        ofxUIToggle *toggle = (ofxUIToggle *) e.getToggle();
+        toggleDrawR = toggle->getValue();
+    }else if (name == "draw G"){
+        ofxUIToggle *toggle = (ofxUIToggle *) e.getToggle();
+        toggleDrawG = toggle->getValue();
+    }else if (name == "draw B"){
+        ofxUIToggle *toggle = (ofxUIToggle *) e.getToggle();
+        toggleDrawB = toggle->getValue();
+    }else if (name == "draw debug"){
+        ofxUIToggle *toggle = (ofxUIToggle *) e.getToggle();
+        toggleDrawDebug = toggle->getValue();
+    }
 }

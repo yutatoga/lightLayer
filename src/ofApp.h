@@ -33,11 +33,12 @@ public:
     void guiEvent(ofxUIEventArgs &e);
     
     ofFbo fboR, fboG, fboB, fbo;
-    ofxUICanvas *gui;
-    ofxUIToggle toggleR, toggleG, toggleB, toggleDebug;
-    ofxUISlider floatSliderColorR, floatSliderColorG, floatSliderColorB;
-    bool showGui;
     ofImage image;
     ofShader shader;
     int colorSelector;
+    
+    //ofxUI
+    ofxUICanvas *gui;
+    bool toggleDrawR, toggleDrawG, toggleDrawB, toggleDrawDebug;
+    float sliderR, sliderG, sliderB;
 };
