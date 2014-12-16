@@ -30,13 +30,13 @@ void ofApp::setup(){
     gui = new ofxUICanvas();
     gui->setPosition(10, 20);
     toggleDrawR = true;
-    gui->addToggle("draw R", toggleDrawR);
+    gui->addToggle("draw R", &toggleDrawR);
     toggleDrawG = true;
-    gui->addToggle("draw G", toggleDrawG);
+    gui->addToggle("draw G", &toggleDrawG);
     toggleDrawB = true;
-    gui->addToggle("draw B", toggleDrawB);
+    gui->addToggle("draw B", &toggleDrawB);
     toggleDrawDebug = true;
-    gui->addToggle("draw debug", toggleDrawDebug);
+    gui->addToggle("draw debug", &toggleDrawDebug);
     sliderR = 1.0;
     gui->addSlider("color R", 0.0, 5.0, &sliderR);
     sliderG = 1.0;
@@ -46,7 +46,6 @@ void ofApp::setup(){
     gui->autoSizeToFitWidgets();
     ofAddListener(gui->newGUIEvent, this, &ofApp::guiEvent);
     gui->loadSettings("settings.xml");
-		
     image.loadImage("photo.jpg");
 		
 #ifdef TARGET_OPENGLES
@@ -71,7 +70,7 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-//    ofLogNotice(ofToString((float)floatSliderColorB));
+
 }
 
 //--------------------------------------------------------------
@@ -102,9 +101,10 @@ void ofApp::draw(){
     fbo.end();
     fbo.draw(0, 0);
     
-    if (toggleDrawDebug) {
-        drawDebug();
-    }
+    if (toggleDrawR) drawR();
+    if (toggleDrawG) drawG();
+    if (toggleDrawB) drawB();
+    if (toggleDrawDebug) drawDebug();
 }
 
 void ofApp::flashDraw(){
@@ -141,8 +141,8 @@ void ofApp::flashDraw(){
 
 void ofApp::drawR(){
     fboR.begin();
-	ofClear(0, 0, 0, 0);
-    ofSetColor(255, 0, 0, 85);
+	ofClear(0, 0, 0, 255);
+    ofSetColor(255, 0, 0, 127);
     ofCircle(100, 100, 100);
     fboR.end();
     ofSetColor(255, 255, 255, 255);
@@ -151,8 +151,8 @@ void ofApp::drawR(){
 
 void ofApp::drawG(){
     fboG.begin();
-    ofClear(0, 0, 0, 0);
-	ofSetColor(0, 255, 0, 85);
+    ofClear(0, 0, 0, 255);
+	ofSetColor(0, 255, 0, 127);
     ofCircle(150, 100, 100);
     fboG.end();
 	ofSetColor(255, 255, 255, 255);
@@ -161,8 +161,8 @@ void ofApp::drawG(){
 
 void ofApp::drawB(){
     fboB.begin();
-    ofClear(0, 0, 0, 0);
-    ofSetColor(0, 0, 255, 85);
+    ofClear(0, 0, 0, 255);
+    ofSetColor(0, 0, 255, 127);
     ofCircle(125, 150, 100);
     fboB.end();
     ofSetColor(255, 255, 255, 255);
@@ -253,19 +253,19 @@ void ofApp::exit(){
 }
 
 void ofApp::guiEvent(ofxUIEventArgs &e){
-    string name = e.widget->getName();
-    int kind = e.widget->getKind();
-    if(name == "draw R"){
-        ofxUIToggle *toggle = (ofxUIToggle *) e.getToggle();
-        toggleDrawR = toggle->getValue();
-    }else if (name == "draw G"){
-        ofxUIToggle *toggle = (ofxUIToggle *) e.getToggle();
-        toggleDrawG = toggle->getValue();
-    }else if (name == "draw B"){
-        ofxUIToggle *toggle = (ofxUIToggle *) e.getToggle();
-        toggleDrawB = toggle->getValue();
-    }else if (name == "draw debug"){
-        ofxUIToggle *toggle = (ofxUIToggle *) e.getToggle();
-        toggleDrawDebug = toggle->getValue();
-    }
+//    string name = e.widget->getName();
+//    int kind = e.widget->getKind();
+//    if(name == "draw R"){
+//        ofxUIToggle *toggle = (ofxUIToggle *) e.getToggle();
+//        toggleDrawR = toggle->getValue();
+//    }else if (name == "draw G"){
+//        ofxUIToggle *toggle = (ofxUIToggle *) e.getToggle();
+//        toggleDrawG = toggle->getValue();
+//    }else if (name == "draw B"){
+//        ofxUIToggle *toggle = (ofxUIToggle *) e.getToggle();
+//        toggleDrawB = toggle->getValue();
+//    }else if (name == "draw debug"){
+//        ofxUIToggle *toggle = (ofxUIToggle *) e.getToggle();
+//        toggleDrawDebug = toggle->getValue();
+//    }
 }
