@@ -26,15 +26,32 @@ void ofApp::setup(){
     ofClear(0, 0, 0, 0);
     fbo.end();
     
-    gui.setup();
-    gui.setPosition(10, 20);
-    gui.add(toggleR.setup("draw R", true));
-    gui.add(toggleG.setup("draw G", true));
-    gui.add(toggleB.setup("draw B", true));
-    gui.add(toggleDebug.setup("draw debug", true));
-    gui.add(floatSliderColorR.setup("color R", 1.0, 0.0, 5.0));
-    gui.add(floatSliderColorG.setup("color G", 1.0, 0.0, 5.0));
-    gui.add(floatSliderColorB.setup("color B", 1.0, 0.0, 5.0));
+    // ofxUI
+    
+    //ofxGui
+//    gui.setup();
+//    gui.setPosition(10, 20);
+//    gui.add(toggleR.setup("draw R", true));
+//    gui.add(toggleG.setup("draw G", true));
+//    gui.add(toggleB.setup("draw B", true));
+//    gui.add(toggleDebug.setup("draw debug", true));
+//    gui.add(floatSliderColorR.setup("color R", 1.0, 0.0, 5.0));
+//    gui.add(floatSliderColorG.setup("color G", 1.0, 0.0, 5.0));
+//    gui.add(floatSliderColorB.setup("color B", 1.0, 0.0, 5.0));
+
+    gui = new ofxUICanvas();
+    gui->addToggle("draw R", true);
+    gui->addToggle("draw G", true);
+    gui->addToggle("draw B", true);
+    gui->addToggle("draw debug", true);
+    gui->addSlider("color R", 0.0, 5.0, 1.0);
+    gui->addSlider("color G", 0.0, 5.0, 1.0);
+    gui->addSlider("color B", 0.0, 5.0, 1.0);
+    
+    gui->autoSizeToFitWidgets();
+    ofAddListener(gui->newGUIEvent, this, &ofApp::guiEvent);
+    gui->loadSettings("settings.xml");
+    
     showGui = true;
 		
     image.loadImage("photo.jpg");
@@ -61,43 +78,43 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    ofLogNotice(ofToString((float)floatSliderColorB));
+//    ofLogNotice(ofToString((float)floatSliderColorB));
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     fbo.begin();
     ofClear(0, 0, 0, 0);
-    //R
-    shader.begin();
-    float colorValueR[] = {floatSliderColorR, 0.0, 0.0, 1.0};
-    shader.setUniform4fv("colorValue", colorValueR);
-    image.draw(0, 0);
-    shader.end();
-    
-    //G
-    shader.begin();
-    float colorValueG[] = {0.0, floatSliderColorG, 0.0, 1.0};
-    shader.setUniform4fv("colorValue", colorValueG);
-    image.draw(0, 0);
-    shader.end();
-
-    //B
-    shader.begin();
-    float colorValueB[] = {0.0, 0.0, floatSliderColorB, 1.0};
-    shader.setUniform4fv("colorValue", colorValueB);
-    image.draw(0, 0);
-    shader.end();
+//    //R
+//    shader.begin();
+//    float colorValueR[] = {floatSliderColorR, 0.0, 0.0, 1.0};
+//    shader.setUniform4fv("colorValue", colorValueR);
+//    image.draw(0, 0);
+//    shader.end();
+//    
+//    //G
+//    shader.begin();
+//    float colorValueG[] = {0.0, floatSliderColorG, 0.0, 1.0};
+//    shader.setUniform4fv("colorValue", colorValueG);
+//    image.draw(0, 0);
+//    shader.end();
+//
+//    //B
+//    shader.begin();
+//    float colorValueB[] = {0.0, 0.0, floatSliderColorB, 1.0};
+//    shader.setUniform4fv("colorValue", colorValueB);
+//    image.draw(0, 0);
+//    shader.end();
 
     fbo.end();
     fbo.draw(0, 0);
     
-    if (toggleDebug) {
-        drawDebug();
-    }
-    if (showGui) {
-        gui.draw();
-    }
+//    if (toggleDebug) {
+//        drawDebug();
+//    }
+//    if (showGui) {
+//        gui.draw();
+//    }
     
     
 
@@ -240,4 +257,15 @@ void ofApp::gotMessage(ofMessage msg){
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){
 
+}
+
+//ofxUI
+void ofApp::exit(){
+    gui->saveSettings("settings.xml");
+    delete gui;
+    
+}
+
+void ofApp::guiEvent(ofxUIEventArgs &e){
+    
 }

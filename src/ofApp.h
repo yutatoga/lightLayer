@@ -1,7 +1,8 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxGui.h"
+#include "ofxUI.h"
+#include "ofxXmlSettings.h"
 #include "ofxTimeMeasurements.h"
 
 class ofApp : public ofBaseApp{
@@ -27,10 +28,14 @@ public:
     void drawDebug();
     void imageFilter(ofImage *img, ofImage *filteredImage, float r, float g, float b);
     
+    //ofxUI
+    void exit();
+    void guiEvent(ofxUIEventArgs &e);
+    
     ofFbo fboR, fboG, fboB, fbo;
-    ofxPanel gui;
-    ofxToggle toggleR, toggleG, toggleB, toggleDebug;
-    ofxFloatSlider floatSliderColorR, floatSliderColorG, floatSliderColorB;
+    ofxUICanvas *gui;
+    ofxUIToggle toggleR, toggleG, toggleB, toggleDebug;
+    ofxUISlider floatSliderColorR, floatSliderColorG, floatSliderColorB;
     bool showGui;
     ofImage image;
     ofShader shader;
