@@ -30,9 +30,9 @@ public:
     ofFbo fboR, fboG, fboB, fbo;
     ofxPanel gui;
     ofxToggle toggleR, toggleG, toggleB, toggleDebug;
+    ofxFloatSlider floatSliderColorR, floatSliderColorG, floatSliderColorB;
     bool showGui;
     ofImage image;
     ofShader shader;
     int colorSelector;
-    
 };

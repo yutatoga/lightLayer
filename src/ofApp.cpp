@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 //    ofSetWindowPosition(300, 1200);
-    ofSetWindowShape(480, 320);
+    ofSetWindowShape(1200, 320);
     ofBackground(0, 0, 0, 0);
 
     fboR.allocate(ofGetWidth(), ofGetHeight());
@@ -25,12 +25,16 @@ void ofApp::setup(){
     fbo.begin();
     ofClear(0, 0, 0, 0);
     fbo.end();
+    
     gui.setup();
     gui.setPosition(10, 20);
     gui.add(toggleR.setup("draw R", true));
     gui.add(toggleG.setup("draw G", true));
     gui.add(toggleB.setup("draw B", true));
     gui.add(toggleDebug.setup("draw debug", true));
+    gui.add(floatSliderColorR.setup("color R", 1.0, 0.0, 5.0));
+    gui.add(floatSliderColorG.setup("color G", 1.0, 0.0, 5.0));
+    gui.add(floatSliderColorB.setup("color B", 1.0, 0.0, 5.0));
     showGui = true;
 		
     image.loadImage("photo.jpg");
@@ -51,31 +55,42 @@ void ofApp::setup(){
     TIME_SAMPLE_SET_FRAMERATE(60.0f);
 //    ofSetVerticalSync(false);
     colorSelector = 0;
+    
+    ofEnableBlendMode(OF_BLENDMODE_ADD);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+    ofLogNotice(ofToString((float)floatSliderColorB));
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-//    fbo.begin();
-//    ofClear(0, 0, 0, 0);
-//    glBlendFunc(GL_ONE, GL_ONE);
-//    if (toggleR) {
-//        drawR();
-//    }
-//    if (toggleG) {
-//        drawG();
-//    }
-//    if (toggleB) {
-//        drawB();
-//    }
-//    fbo.end();
-//    ofSetColor(255, 255, 255, 255);
-//    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-//    fbo.draw(0, 0);
+    fbo.begin();
+    ofClear(0, 0, 0, 0);
+    //R
+    shader.begin();
+    float colorValueR[] = {floatSliderColorR, 0.0, 0.0, 1.0};
+    shader.setUniform4fv("colorValue", colorValueR);
+    image.draw(0, 0);
+    shader.end();
+    
+    //G
+    shader.begin();
+    float colorValueG[] = {0.0, floatSliderColorG, 0.0, 1.0};
+    shader.setUniform4fv("colorValue", colorValueG);
+    image.draw(0, 0);
+    shader.end();
+
+    //B
+    shader.begin();
+    float colorValueB[] = {0.0, 0.0, floatSliderColorB, 1.0};
+    shader.setUniform4fv("colorValue", colorValueB);
+    image.draw(0, 0);
+    shader.end();
+
+    fbo.end();
+    fbo.draw(0, 0);
     
     if (toggleDebug) {
         drawDebug();
@@ -83,6 +98,9 @@ void ofApp::draw(){
     if (showGui) {
         gui.draw();
     }
+    
+    
+
 }
 
 void ofApp::flashDraw(){
@@ -186,7 +204,7 @@ void ofApp::keyPressed(int key){
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
-
+    
 }
 
 //--------------------------------------------------------------
