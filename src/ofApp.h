@@ -32,13 +32,22 @@ public:
     void exit();
     void guiEvent(ofxUIEventArgs &e);
     
+    //camera
+    void takePicture(int RGBID);
+    
     ofFbo fboR, fboG, fboB, fbo;
     ofImage image;
+    ofImage imageArrayRGB[3];
     ofShader shader;
     int colorSelector;
     
     //ofxUI
     ofxUICanvas *gui;
-    bool toggleDrawR, toggleDrawG, toggleDrawB, toggleDrawDebug;
+    bool toggleDrawR, toggleDrawG, toggleDrawB, toggleDrawDebug, toggleDrawCamera, buttonCameraR, buttonCameraG, buttonCameraB;
     float sliderR, sliderG, sliderB;
+    
+    //camera
+    int cameraWidth;
+    int cameraHeight;
+    ofVideoGrabber videoGrabber;
 };

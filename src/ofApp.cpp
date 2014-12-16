@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 //    ofSetWindowPosition(300, 1200);
-    ofSetWindowShape(1200, 320);
+    ofSetWindowShape(1200, 640);
     ofBackground(0, 0, 0, 0);
 
     fboR.allocate(ofGetWidth(), ofGetHeight());
@@ -43,6 +43,14 @@ void ofApp::setup(){
     gui->addSlider("color G", 0.0, 5.0, &sliderG);
     sliderB = 1.0;
     gui->addSlider("color B", 0.0, 5.0, &sliderB);
+    toggleDrawCamera = false;
+    gui->addToggle("draw camera", &toggleDrawCamera);
+    buttonCameraR = false;
+    gui->addButton("camera R", &buttonCameraR);
+    buttonCameraG = false;
+    gui->addButton("camera G", &buttonCameraG);
+    buttonCameraB = false;
+    gui->addButton("camera B", &buttonCameraB);
     gui->autoSizeToFitWidgets();
     ofAddListener(gui->newGUIEvent, this, &ofApp::guiEvent);
     gui->loadSettings("settings.xml");
@@ -66,11 +74,31 @@ void ofApp::setup(){
     colorSelector = 0;
     
     ofEnableBlendMode(OF_BLENDMODE_ADD);
+    
+    //camera
+    cameraWidth = 320;
+    cameraHeight = 240;
+    vector<ofVideoDevice> devices = videoGrabber.listDevices();
+    for(int i = 0; i < devices.size(); i++){
+        cout << devices[i].id << ": " << devices[i].deviceName;
+        if( devices[i].bAvailable ){
+            cout << endl;
+        }else{
+            cout << " - unavailable " << endl;
+        }
+    }
+    videoGrabber.setDeviceID(0);
+    videoGrabber.setDesiredFrameRate(60);
+    videoGrabber.initGrabber(cameraWidth,cameraHeight);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+    //camera
+    videoGrabber.update();
+    if (videoGrabber.isFrameNew()){
+        //update ofImages here
+    }
 }
 
 //--------------------------------------------------------------
@@ -81,21 +109,21 @@ void ofApp::draw(){
     shader.begin();
     float colorValueR[] = {sliderR, 0.0, 0.0, 1.0};
     shader.setUniform4fv("colorValue", colorValueR);
-    image.draw(0, 0);
+    imageArrayRGB[0].draw(0, 0);
     shader.end();
     
     //G
     shader.begin();
     float colorValueG[] = {0.0, sliderG, 0.0, 1.0};
     shader.setUniform4fv("colorValue", colorValueG);
-    image.draw(0, 0);
+    imageArrayRGB[1].draw(0, 0);
     shader.end();
 
     //B
     shader.begin();
     float colorValueB[] = {0.0, 0.0, sliderB, 1.0};
     shader.setUniform4fv("colorValue", colorValueB);
-    image.draw(0, 0);
+    imageArrayRGB[2].draw(0, 0);
     shader.end();
 
     fbo.end();
@@ -105,6 +133,8 @@ void ofApp::draw(){
     if (toggleDrawG) drawG();
     if (toggleDrawB) drawB();
     if (toggleDrawDebug) drawDebug();
+    
+    if (toggleDrawCamera) videoGrabber.draw((ofGetWidth()-videoGrabber.getWidth())*0.5, (ofGetHeight()-videoGrabber.getHeight())*0.5);
 }
 
 void ofApp::flashDraw(){
@@ -253,8 +283,17 @@ void ofApp::exit(){
 }
 
 void ofApp::guiEvent(ofxUIEventArgs &e){
-//    string name = e.widget->getName();
+    string name = e.widget->getName();
 //    int kind = e.widget->getKind();
+    if (name == "camera R" && e.getButton()->getValue()) {
+        takePicture(0);
+    }else if(name == "camera G" && e.getButton()->getValue()){
+        takePicture(1);
+    }else if (name == "camera B" && e.getButton()->getValue()){
+        takePicture(2);
+    }
+    
+    
 //    if(name == "draw R"){
 //        ofxUIToggle *toggle = (ofxUIToggle *) e.getToggle();
 //        toggleDrawR = toggle->getValue();
@@ -268,4 +307,8 @@ void ofApp::guiEvent(ofxUIEventArgs &e){
 //        ofxUIToggle *toggle = (ofxUIToggle *) e.getToggle();
 //        toggleDrawDebug = toggle->getValue();
 //    }
+}
+
+void ofApp::takePicture(int RGBID){
+    imageArrayRGB[RGBID].setFromPixels(videoGrabber.getPixels(), videoGrabber.getWidth(), videoGrabber.getHeight(), OF_IMAGE_COLOR);
 }
