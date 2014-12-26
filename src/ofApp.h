@@ -25,6 +25,7 @@ public:
     void drawR();
     void drawG();
     void drawB();
+		void drawRGB();
     void drawDebug();
     void imageFilter(ofImage *img, ofImage *filteredImage, float r, float g, float b);
     
@@ -50,4 +51,11 @@ public:
     int cameraWidth;
     int cameraHeight;
     ofVideoGrabber videoGrabber;
+		
+		//enable projection installation
+		bool enableProjectionRGB;
+		int lastShootingTime;
+		float flashTime;
+		float waitingTime;
+		int projectionColorID;
 };

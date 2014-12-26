@@ -2,8 +2,9 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+		ofSetFullscreen(true);
 //    ofSetWindowPosition(300, 1200);
-    ofSetWindowShape(1200, 640);
+//    ofSetWindowShape(1200, 640);
     ofBackground(0, 0, 0, 0);
 
     fboR.allocate(ofGetWidth(), ofGetHeight());
@@ -76,8 +77,8 @@ void ofApp::setup(){
     ofEnableBlendMode(OF_BLENDMODE_ADD);
     
     //camera
-    cameraWidth = 320;
-    cameraHeight = 240;
+    cameraWidth = ofGetWidth();
+    cameraHeight = ofGetHeight();
     vector<ofVideoDevice> devices = videoGrabber.listDevices();
     for(int i = 0; i < devices.size(); i++){
         cout << devices[i].id << ": " << devices[i].deviceName;
@@ -90,6 +91,12 @@ void ofApp::setup(){
     videoGrabber.setDeviceID(0);
     videoGrabber.setDesiredFrameRate(60);
     videoGrabber.initGrabber(cameraWidth,cameraHeight);
+		
+		enableProjectionRGB = true;
+		lastShootingTime = ofGetElapsedTimef();
+		flashTime = 0.5;
+		waitingTime = 3.0;
+		projectionColorID = 0;
 }
 
 //--------------------------------------------------------------
@@ -103,38 +110,73 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    fbo.begin();
-    ofClear(0, 0, 0, 0);
-    //R
-    shader.begin();
-    float colorValueR[] = {sliderR, 0.0, 0.0, 1.0};
-    shader.setUniform4fv("colorValue", colorValueR);
-    imageArrayRGB[0].draw(0, 0);
-    shader.end();
-    
-    //G
-    shader.begin();
-    float colorValueG[] = {0.0, sliderG, 0.0, 1.0};
-    shader.setUniform4fv("colorValue", colorValueG);
-    imageArrayRGB[1].draw(0, 0);
-    shader.end();
+		if (enableProjectionRGB) {
+				if (ofGetElapsedTimef()-lastShootingTime > waitingTime) {
+						// draw color
+						switch (projectionColorID) {
+								case 0:
+										ofSetColor(255, 0, 0, 255);
+										break;
+								case 1:
+										ofSetColor(0, 255, 0, 255);
+										break;
+								case 2:
+										ofSetColor(0, 0, 255, 255);
+										break;
+								default:
+										break;
+						}
+						ofRect(0, 0, ofGetWidth(), ofGetHeight());
+						ofSetColor(255, 255, 255, 255);
+						if (ofGetElapsedTimef()-lastShootingTime > waitingTime+flashTime) {
+								// shooting
+								takePicture(projectionColorID);
+								lastShootingTime = ofGetElapsedTimef();
+								projectionColorID++;
+								if (projectionColorID > 2) {
+										projectionColorID = 0;
+								}
+						}
+				}else{
+						drawRGB();
+				}
+		}else{
+				drawRGB();
+				if (toggleDrawR) drawR();
+				if (toggleDrawG) drawG();
+				if (toggleDrawB) drawB();
+				if (toggleDrawDebug) drawDebug();
+				
+				if (toggleDrawCamera) videoGrabber.draw((ofGetWidth()-videoGrabber.getWidth())*0.5, (ofGetHeight()-videoGrabber.getHeight())*0.5);
+		}
+}
 
-    //B
-    shader.begin();
-    float colorValueB[] = {0.0, 0.0, sliderB, 1.0};
-    shader.setUniform4fv("colorValue", colorValueB);
-    imageArrayRGB[2].draw(0, 0);
-    shader.end();
-
-    fbo.end();
-    fbo.draw(0, 0);
-    
-    if (toggleDrawR) drawR();
-    if (toggleDrawG) drawG();
-    if (toggleDrawB) drawB();
-    if (toggleDrawDebug) drawDebug();
-    
-    if (toggleDrawCamera) videoGrabber.draw((ofGetWidth()-videoGrabber.getWidth())*0.5, (ofGetHeight()-videoGrabber.getHeight())*0.5);
+void ofApp::drawRGB(){
+		fbo.begin();
+		ofClear(0, 0, 0, 0);
+		//R
+		shader.begin();
+		float colorValueR[] = {sliderR, 0.0, 0.0, 1.0};
+		shader.setUniform4fv("colorValue", colorValueR);
+		imageArrayRGB[0].draw(0, 0);
+		shader.end();
+		
+		//G
+		shader.begin();
+		float colorValueG[] = {0.0, sliderG, 0.0, 1.0};
+		shader.setUniform4fv("colorValue", colorValueG);
+		imageArrayRGB[1].draw(0, 0);
+		shader.end();
+		
+		//B
+		shader.begin();
+		float colorValueB[] = {0.0, 0.0, sliderB, 1.0};
+		shader.setUniform4fv("colorValue", colorValueB);
+		imageArrayRGB[2].draw(0, 0);
+		shader.end();
+		
+		fbo.end();
+		fbo.draw(0, 0);
 }
 
 void ofApp::flashDraw(){
