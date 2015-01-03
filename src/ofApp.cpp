@@ -88,7 +88,7 @@ void ofApp::setup(){
             cout << " - unavailable " << endl;
         }
     }
-    videoGrabber.setDeviceID(1);
+    videoGrabber.setDeviceID(0);
     videoGrabber.setDesiredFrameRate(60);
     videoGrabber.initGrabber(cameraWidth,cameraHeight);
 		
