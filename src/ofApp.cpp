@@ -88,15 +88,16 @@ void ofApp::setup(){
             cout << " - unavailable " << endl;
         }
     }
-    videoGrabber.setDeviceID(0);
+    videoGrabber.setDeviceID(1);
     videoGrabber.setDesiredFrameRate(60);
     videoGrabber.initGrabber(cameraWidth,cameraHeight);
 		
-		enableProjectionRGB = true;
-		lastShootingTime = ofGetElapsedTimef();
-		flashTime = 0.5;
-		waitingTime = 3.0;
-		projectionColorID = 0;
+    enableProjectionRGB = true;
+    lastShootingTime = ofGetElapsedTimef();
+    flashTime = 0.1;
+    waitingTime = 3.0;
+    projectionColorID = 0;
+    cursorVisible = true;
 }
 
 //--------------------------------------------------------------
@@ -273,6 +274,9 @@ void ofApp::keyPressed(int key){
         case 't':
             TIME_SAMPLE_GET_ENABLED() ? TIME_SAMPLE_DISABLE() : TIME_SAMPLE_ENABLE();
             break;
+        case 'f':
+            ofToggleFullscreen();
+            break;
         default:
             break;
     }
@@ -295,7 +299,13 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-
+    if (cursorVisible) {
+        cursorVisible = false;
+        ofHideCursor();
+    }else{
+        cursorVisible = true;
+        ofShowCursor();
+    }
 }
 
 //--------------------------------------------------------------
@@ -353,4 +363,5 @@ void ofApp::guiEvent(ofxUIEventArgs &e){
 
 void ofApp::takePicture(int RGBID){
     imageArrayRGB[RGBID].setFromPixels(videoGrabber.getPixels(), videoGrabber.getWidth(), videoGrabber.getHeight(), OF_IMAGE_COLOR);
+    imageArrayRGB[RGBID].mirror(false, true);
 }

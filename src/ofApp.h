@@ -58,4 +58,6 @@ public:
 		float flashTime;
 		float waitingTime;
 		int projectionColorID;
+    
+    bool cursorVisible;
 };
