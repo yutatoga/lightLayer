@@ -6,6 +6,7 @@
 #include "ofxTimeMeasurements.h"
 
 class ofApp : public ofBaseApp{
+    
 public:
     void setup();
     void update();
@@ -25,7 +26,7 @@ public:
     void drawR();
     void drawG();
     void drawB();
-		void drawRGB();
+    void drawRGB();
     void drawDebug();
     void imageFilter(ofImage *img, ofImage *filteredImage, float r, float g, float b);
     
@@ -44,20 +45,20 @@ public:
     
     //ofxUI
     ofxUICanvas *gui;
-    bool toggleDrawR, toggleDrawG, toggleDrawB, toggleDrawDebug, toggleDrawCamera, buttonCameraR, buttonCameraG, buttonCameraB;
+    bool toggleDrawR, toggleDrawG, toggleDrawB, toggleDrawDebug, toggleDrawCamera, buttonCameraR, buttonCameraG, buttonCameraB, enableProjectionRGB;
     float sliderR, sliderG, sliderB;
     
     //camera
     int cameraWidth;
     int cameraHeight;
     ofVideoGrabber videoGrabber;
-		
-		//enable projection installation
-		bool enableProjectionRGB;
-		int lastShootingTime;
-		float flashTime;
-		float waitingTime;
-		int projectionColorID;
+    
+    //enable projection installation
+    //    bool enableProjectionRGB;
+    int lastShootingTime;
+    float flashTime;
+    float waitingTime;
+    int projectionColorID;
     
     bool cursorVisible;
 };
